@@ -172,13 +172,13 @@ public class StarbucksTaskManager {
 
     private String getValidatedDepartmentInput() {
         String[] validDepartments = { "Baristas", "Cocina", "Limpieza", "Administracion" };
-
+        
         System.out.println("\n--- SELECCIONAR DEPARTAMENTO ---");
         for (int i = 0; i < validDepartments.length; i++) {
             System.out.println((i + 1) + ". " + validDepartments[i]);
         }
         System.out.println("-------------------------------");
-
+        
         int choice = getValidatedIntInput("Seleccione departamento (1-4): ", 1, 4);
         return validDepartments[choice - 1];
     }
