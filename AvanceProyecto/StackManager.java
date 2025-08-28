@@ -34,6 +34,14 @@ public class StackManager {
         return urgentTasks.isEmpty();
     }
 
+    public int getSize() {
+        return urgentTasks.size();
+    }
+
+    public Task getTaskAt(int index) {
+        return urgentTasks.get(index);
+    }
+
     public void display() {
         if (urgentTasks.isEmpty()) {
             System.out.println("No hay tareas urgentes pendientes");
