@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.PriorityQueue;
+import java.util.List;
 
 public class StarbucksTaskManager {
     private StackManager urgentStack;
@@ -108,8 +110,58 @@ public class StarbucksTaskManager {
             case 4 -> priorityQueue.display();
             case 5 -> {
                 String dept = getValidatedDepartmentInput();
-                departmentList.displayByDepartment(dept);
+                displayTasksByDepartment(dept);
             }
+        }
+    }
+
+    private void displayTasksByDepartment(String department) {
+        System.out.println("\n=== TAREAS DEL DEPARTAMENTO " + department.toUpperCase() + " ===");
+        
+        boolean found = false;
+        
+        // Buscar en tareas urgentes
+        if (!urgentStack.isEmpty()) {
+            for (int i = 0; i < urgentStack.getSize(); i++) {
+                Task task = urgentStack.getTaskAt(i);
+                if (task.getDepartment().equalsIgnoreCase(department)) {
+                    System.out.println("[URGENTE] " + task);
+                    found = true;
+                }
+            }
+        }
+        
+        // Buscar en tareas programadas
+        if (!scheduledQueue.isEmpty()) {
+            for (Task task : scheduledQueue.getAllTasks()) {
+                if (task.getDepartment().equalsIgnoreCase(department)) {
+                    System.out.println("[PROGRAMADA] " + task);
+                    found = true;
+                }
+            }
+        }
+        
+        // Buscar en tareas departamentales
+        List<Task> deptTasks = departmentList.findByDepartment(department);
+        for (Task task : deptTasks) {
+            System.out.println("[DEPARTAMENTAL] " + task);
+            found = true;
+        }
+        
+        // Buscar en tareas prioritarias
+        if (!priorityQueue.isEmpty()) {
+            PriorityQueue<Task> copy = new PriorityQueue<>(priorityQueue.getQueue());
+            while (!copy.isEmpty()) {
+                Task task = copy.poll();
+                if (task.getDepartment().equalsIgnoreCase(department)) {
+                    System.out.println("[PRIORITARIA] " + task);
+                    found = true;
+                }
+            }
+        }
+        
+        if (!found) {
+            System.out.println("No hay tareas para el departamento: " + department);
         }
     }
 
@@ -172,13 +224,13 @@ public class StarbucksTaskManager {
 
     private String getValidatedDepartmentInput() {
         String[] validDepartments = { "Baristas", "Cocina", "Limpieza", "Administracion" };
-        
+
         System.out.println("\n--- SELECCIONAR DEPARTAMENTO ---");
         for (int i = 0; i < validDepartments.length; i++) {
             System.out.println((i + 1) + ". " + validDepartments[i]);
         }
         System.out.println("-------------------------------");
-        
+
         int choice = getValidatedIntInput("Seleccione departamento (1-4): ", 1, 4);
         return validDepartments[choice - 1];
     }
